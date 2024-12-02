@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import userModel from "./../models/userModel.js";
-// http://background-removal-kl.vercel.app/api/user/webhooks
+// https://background-removal-kl.vercel.app/api/user/webhooks
 const clerkWebHook = async (req, res) => {
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
@@ -12,13 +12,14 @@ const clerkWebHook = async (req, res) => {
     });
 
     const { data, type } = req.body;
+
     switch (type) {
       case "user.created": {
         const userData = {
           clerkId: data.id,
-          firstName: data.firstName,
-          lastName: data.lastName,
           email: data.email_addresses[0].email_address,
+          firstName: data.first_name,
+          lastName: data.last_name,
           photo: data.image_url,
         };
         await userModel.create(userData);
@@ -28,10 +29,9 @@ const clerkWebHook = async (req, res) => {
       }
       case "user.updated": {
         const userData = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-
           email: data.email_addresses[0].email_address,
+          firstName: data.first_name,
+          lastName: data.last_name,
           photo: data.image_url,
         };
         await userModel.findOneAndUpdate({ clerkId: data.id }, userData);
