@@ -12,7 +12,7 @@ await connectDB();
 
 // app intialize middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "https://background-removal-rho.vercel.app" }));
 
 // app routes
 app.get("/", (req, res) => res.send("API WORKING"));
